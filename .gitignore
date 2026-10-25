@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+*.log
+# 個人データのバックアップを誤ってコミットしないため
+*.jhbak
+backup*.json
