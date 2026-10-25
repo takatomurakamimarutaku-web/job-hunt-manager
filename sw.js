@@ -3,7 +3,7 @@
 // ★ アプリのファイルを変更したら、必ず CACHE_VERSION を上げること（js/app.js の APP_VERSION も同じ値にする）。
 //    上げないと、利用者の端末では古いファイルが使われ続ける。手順は README の「キャッシュの更新」を参照。
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_PREFIX = 'job-hunt-';
 const CACHE_NAME = `${CACHE_PREFIX}${CACHE_VERSION}`;
 
@@ -14,6 +14,8 @@ const PRECACHE = [
   'manifest.webmanifest',
   'css/style.css',
   'js/app.js',
+  'js/backup.js',
+  'js/crypto.js',
   'js/db.js',
   'js/router.js',
   'js/search.js',
@@ -23,6 +25,7 @@ const PRECACHE = [
   'js/validate.js',
   'js/views/add.js',
   'js/views/application-detail.js',
+  'js/views/backup.js',
   'js/views/application-form.js',
   'js/views/board.js',
   'js/views/companies.js',

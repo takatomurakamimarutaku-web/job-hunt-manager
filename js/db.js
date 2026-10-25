@@ -429,3 +429,14 @@ export function getHomeSummary(db, now = new Date(), limit = 5) {
     return summarizeHome({ companies, applications, events }, now, limit);
   });
 }
+
+// ---------- 件数 ----------
+
+/** 各ストアの件数（バックアップ画面の表示と、置き換え前の確認に使う） */
+export function countAll(db) {
+  return run(db, STORES, 'readonly', async (tx) => {
+    const out = {};
+    for (const store of STORES) out[store] = await req(tx.objectStore(store).count());
+    return out;
+  });
+}

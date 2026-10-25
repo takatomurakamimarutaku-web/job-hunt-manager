@@ -137,6 +137,22 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .loading, .muted { color: var(--text-muted); }
 .notice { padding: 12px; border-radius: var(--radius); background: var(--warning-soft); color: var(--text); font-size: 14px; }
 .notice-info { background: var(--primary-soft); }
+.notice-danger { background: var(--danger-soft); }
+.notice p { margin: 0; }
+.notice p + p { margin-top: 6px; }
+.block { display: block; }
+.center { text-align: center; }
+
+/* バックアップ */
+.backup-ready { display: grid; gap: 8px; margin-top: 12px; }
+.backup-ready p { margin: 0; }
+.backup-reminder {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding: 10px 12px;
+  border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-muted); font-size: 13px; text-decoration: none;
+}
+.backup-reminder span { flex: 1; min-width: 0; }
+.backup-reminder .icon { flex: 0 0 auto; width: 16px; height: 16px; }
 
 /* ---------- 下部タブ ---------- */
 .tab-bar {

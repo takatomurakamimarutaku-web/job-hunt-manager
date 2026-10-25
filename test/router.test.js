@@ -29,7 +29,7 @@ test('parseHash: 未知のパス・不正なエンコードは notFound', () => 
 
 test('parseHash: 仕様の全画面に対応する', () => {
   const paths = ['/home', '/companies', '/company/1', '/application/1', '/board', '/tasks', '/questions',
-    '/documents', '/contacts', '/compare', '/stats', '/settings', '/more', '/add'];
+    '/documents', '/contacts', '/compare', '/stats', '/settings', '/backup', '/more', '/add'];
   for (const p of paths) assert.notEqual(parseHash(`#${p}`).name, 'notFound', p);
   assert.equal(new Set(ROUTES.map((r) => r.name)).size, ROUTES.length);
 });

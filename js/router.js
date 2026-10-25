@@ -22,6 +22,7 @@ export const ROUTES = Object.freeze([
   { name: 'stats', path: '/stats' },
   { name: 'more', path: '/more' },
   { name: 'settings', path: '/settings' },
+  { name: 'backup', path: '/backup' },
 ]);
 
 export const DEFAULT_PATH = '/home';
