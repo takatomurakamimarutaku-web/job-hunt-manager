@@ -2,7 +2,7 @@
   "name": "job-hunt-manager",
   "version": "0.1.0",
   "private": true,
-  "description": "転職活動マネージャー（iPhone向けPWA）。package.json はテスト実行専用。",
+  "description": "キャリログ：転職活動管理（iPhone向けPWA）。package.json はテスト実行専用。",
   "type": "module",
   "scripts": {
     "test": "node --test",
