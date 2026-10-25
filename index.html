@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111318" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="転職管理">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>転職活動マネージャー</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <button type="button" class="header-back" id="back-button" aria-label="戻る" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+      <span>戻る</span>
+    </button>
+    <h1 class="header-title" id="page-title">転職活動マネージャー</h1>
+    <div class="header-action" id="header-action"></div>
+  </header>
+
+  <div class="update-banner" id="update-banner" role="status" hidden>
+    <span>新しいバージョンがあります</span>
+    <button type="button" class="btn btn-small btn-primary" id="update-button">更新</button>
+  </div>
+
+  <main class="app-main" id="app" tabindex="-1">
+    <p class="loading">読み込み中…</p>
+    <noscript><p class="notice">このアプリを使うには JavaScript を有効にしてください。</p></noscript>
+  </main>
+
+  <nav class="tab-bar" aria-label="メインメニュー">
+    <a class="tab" href="#/home" data-tab="home">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" /></svg>
+      <span>ホーム</span>
+    </a>
+    <a class="tab" href="#/board" data-tab="board">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="5" height="16" rx="1" /><rect x="10" y="4" width="5" height="11" rx="1" /><rect x="17" y="4" width="4" height="7" rx="1" /></svg>
+      <span>応募</span>
+    </a>
+    <a class="tab tab-add" href="#/add" data-tab="add" aria-label="追加">
+      <span class="tab-add-circle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></span>
+    </a>
+    <a class="tab" href="#/tasks" data-tab="tasks">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2" /></svg>
+      <span>タスク</span>
+    </a>
+    <a class="tab" href="#/more" data-tab="more">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></svg>
+      <span>その他</span>
+    </a>
+  </nav>
+
+  <div class="toast-area" id="toast-area" aria-live="polite"></div>
+  <dialog class="dialog" id="dialog"></dialog>
+</body>
+</html>

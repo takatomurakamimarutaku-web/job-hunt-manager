@@ -1,0 +1,15 @@
+{
+  "name": "job-hunt-manager",
+  "version": "0.1.0",
+  "private": true,
+  "description": "転職活動マネージャー（iPhone向けPWA）。package.json はテスト実行専用。",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "check": "node scripts/check-pwa.js",
+    "icons": "node scripts/build-icons.js"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "6.2.6"
+  }
+}
