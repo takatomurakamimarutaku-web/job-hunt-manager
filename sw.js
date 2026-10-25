@@ -3,7 +3,7 @@
 // ★ アプリのファイルを変更したら、必ず CACHE_VERSION を上げること（js/app.js の APP_VERSION も同じ値にする）。
 //    上げないと、利用者の端末では古いファイルが使われ続ける。手順は README の「キャッシュの更新」を参照。
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_PREFIX = 'job-hunt-';
 const CACHE_NAME = `${CACHE_PREFIX}${CACHE_VERSION}`;
 

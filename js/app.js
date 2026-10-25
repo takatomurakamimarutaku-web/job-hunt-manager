@@ -16,7 +16,7 @@ import * as settings from './views/settings.js';
 import * as placeholder from './views/placeholder.js';
 
 /** アプリのバージョン。sw.js の CACHE_VERSION と同じ値にする（check-pwa.js で検証） */
-export const APP_VERSION = 'v1';
+export const APP_VERSION = 'v2';
 
 const VIEWS = {
   home, companies, board, add, more, settings,
@@ -81,8 +81,8 @@ async function renderRoute(route) {
     };
     const result = await view.render(ctx);
     if (token !== renderToken) return; // より新しい画面遷移があった
-    els.title.textContent = result.title || '転職活動マネージャー';
-    document.title = result.title ? `${result.title} - 転職活動マネージャー` : '転職活動マネージャー';
+    els.title.textContent = result.title || 'キャリログ';
+    document.title = result.title ? `${result.title} - キャリログ` : 'キャリログ';
     els.headerAction.replaceChildren(...(result.headerActions || []));
     els.back.hidden = TOP_LEVEL.has(route.name);
     els.main.classList.toggle('has-actions', !!result.hasActions);

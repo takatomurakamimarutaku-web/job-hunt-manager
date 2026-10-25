@@ -63,7 +63,7 @@ test('新しいファイルを PRECACHE に登録し忘れるとエラー', () =
 });
 
 test('APP_VERSION と CACHE_VERSION が違うとエラー', () => {
-  const { errors } = checkWith((d) => replaceIn(d, 'sw.js', "CACHE_VERSION = 'v1'", "CACHE_VERSION = 'v2'"));
+  const { errors } = checkWith((d) => replaceIn(d, 'sw.js', "CACHE_VERSION = '", "CACHE_VERSION = 'mismatch-"));
   assert.ok(errors.some((e) => e.includes('一致しません')));
 });
 

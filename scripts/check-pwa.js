@@ -75,8 +75,8 @@ export function checkPwa(root = DEFAULT_ROOT, { writeHash = false, updateHash = 
     }
   }
   if (manifest) {
-    if (manifest.name !== '転職活動マネージャー') errors.push('manifest: name が「転職活動マネージャー」ではありません');
-    if (manifest.short_name !== '転職管理') errors.push('manifest: short_name が「転職管理」ではありません');
+    if (manifest.name !== 'キャリログ') errors.push('manifest: name が「キャリログ」ではありません');
+    if (manifest.short_name !== 'キャリログ') errors.push('manifest: short_name が「キャリログ」ではありません');
     if (manifest.display !== 'standalone') errors.push('manifest: display が standalone ではありません');
     if (manifest.start_url !== './') errors.push('manifest: start_url が "./" ではありません');
     if (manifest.scope !== './') errors.push('manifest: scope が "./" ではありません');

@@ -2,8 +2,9 @@
 // 同じ図形定義から SVG と PNG（180 / 192 / 512px、maskable を含む）を生成する。
 // 使い方: node scripts/build-icons.js
 //
-// 図形は「角丸四角形」と「太さのある線分（端は丸）」だけに限定し、
+// 図形は「角丸四角形（円は r = 幅/2 で表す）」と「太さのある線分（端は丸）」だけに限定し、
 // 各ピクセルを 4×4 のサブピクセルで判定して縁を滑らかにする（アンチエイリアス）。
+// 背景は左上→右下の線形グラデーション、各図形は opacity（不透明度）を指定できる。
 
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { deflateSync } from 'node:zlib';
@@ -15,21 +16,27 @@ const OUT = join(ROOT, 'icons');
 const SIZE = 512; // 図形の座標系
 
 const COLORS = {
-  bg: '#2563eb',
-  paper: '#ffffff',
-  clip: '#1e3a8a',
-  check: '#2563eb',
-  line: '#bfdbfe',
+  bgFrom: '#f6f7fb', // 背景グラデーション（左上）
+  bgTo: '#dce3f2', // 背景グラデーション（右下）
+  back: '#a9bbea', // 一番奥のカード
+  middle: '#6383dc', // 中間のカード
+  front: '#1d3c9a', // 手前のカード
+  white: '#ffffff',
+  now: '#ffc94d', // 「いま進めている選考」を表す金色の点
 };
 
-/** クリップボード＋チェックマーク（座標は 512×512） */
+/** キャリログ：応募企業のカードが重なった束（座標は 512×512） */
 const CONTENT = [
-  { type: 'rect', x: 136, y: 104, w: 240, h: 312, r: 28, fill: COLORS.paper },
-  { type: 'rect', x: 196, y: 76, w: 120, h: 60, r: 18, fill: COLORS.clip },
-  { type: 'line', x1: 184, y1: 188, x2: 328, y2: 188, width: 20, stroke: COLORS.line },
-  { type: 'line', x1: 196, y1: 288, x2: 240, y2: 332, width: 30, stroke: COLORS.check },
-  { type: 'line', x1: 240, y1: 332, x2: 324, y2: 236, width: 30, stroke: COLORS.check },
+  { type: 'rect', x: 176, y: 112, w: 160, h: 220, r: 28, fill: COLORS.back },
+  { type: 'rect', x: 150, y: 142, w: 212, h: 220, r: 30, fill: COLORS.middle },
+  { type: 'rect', x: 122, y: 176, w: 268, h: 224, r: 34, fill: COLORS.front },
+  { type: 'rect', x: 158, y: 216, w: 40, h: 40, r: 20, fill: COLORS.now },
+  { type: 'rect', x: 214, y: 227, w: 128, h: 18, r: 9, fill: COLORS.white },
+  { type: 'rect', x: 160, y: 292, w: 192, h: 16, r: 8, fill: COLORS.white, opacity: 0.45 },
+  { type: 'rect', x: 160, y: 328, w: 136, h: 16, r: 8, fill: COLORS.white, opacity: 0.45 },
 ];
+
+const BG_GRADIENT = { from: COLORS.bgFrom, to: COLORS.bgTo };
 
 /**
  * @param {'any'|'full'|'maskable'} variant
@@ -37,8 +44,8 @@ const CONTENT = [
  */
 function shapes(variant) {
   const bg = variant === 'any'
-    ? { type: 'rect', x: 0, y: 0, w: SIZE, h: SIZE, r: 112, fill: COLORS.bg }
-    : { type: 'rect', x: 0, y: 0, w: SIZE, h: SIZE, r: 0, fill: COLORS.bg };
+    ? { type: 'rect', x: 0, y: 0, w: SIZE, h: SIZE, r: 112, gradient: BG_GRADIENT }
+    : { type: 'rect', x: 0, y: 0, w: SIZE, h: SIZE, r: 0, gradient: BG_GRADIENT };
   const scale = variant === 'maskable' ? 0.8 : 1;
   const c = SIZE / 2;
   const t = (v) => c + (v - c) * scale;
@@ -52,13 +59,24 @@ function shapes(variant) {
 
 // ---------- SVG ----------
 
+const num = (v) => Math.round(v * 100) / 100;
+
 function toSvg(list) {
-  const body = list.map((s) =>
-    s.type === 'rect'
-      ? `  <rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" rx="${s.r}" fill="${s.fill}"/>`
-      : `  <line x1="${s.x1}" y1="${s.y1}" x2="${s.x2}" y2="${s.y2}" stroke="${s.stroke}" stroke-width="${s.width}" stroke-linecap="round"/>`
-  ).join('\n');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE}" height="${SIZE}">\n${body}\n</svg>\n`;
+  const defs = [];
+  const body = list.map((s) => {
+    let fill = s.fill;
+    if (s.gradient) {
+      defs.push(`  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${s.gradient.from}"/><stop offset="1" stop-color="${s.gradient.to}"/></linearGradient></defs>`);
+      fill = 'url(#bg)';
+    }
+    if (s.type === 'rect') {
+      const op = s.opacity === undefined ? '' : ` fill-opacity="${s.opacity}"`;
+      return `  <rect x="${num(s.x)}" y="${num(s.y)}" width="${num(s.w)}" height="${num(s.h)}" rx="${num(s.r)}" fill="${fill}"${op}/>`;
+    }
+    const op = s.opacity === undefined ? '' : ` stroke-opacity="${s.opacity}"`;
+    return `  <line x1="${num(s.x1)}" y1="${num(s.y1)}" x2="${num(s.x2)}" y2="${num(s.y2)}" stroke="${s.stroke}" stroke-width="${num(s.width)}" stroke-linecap="round"${op}/>`;
+  });
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE}" height="${SIZE}">\n${[...defs, ...body].join('\n')}\n</svg>\n`;
 }
 
 // ---------- ラスタライズ ----------
@@ -87,20 +105,35 @@ function rasterize(list, size) {
   const k = SIZE / size;
   const SS = 4;
   const px = new Uint8Array(size * size * 4);
-  const layers = list.map((s) => ({ s, rgb: hex(s.fill || s.stroke), inside: s.type === 'rect' ? insideRect : insideLine }));
+  const layers = list.map((s) => {
+    let colorAt;
+    if (s.gradient) {
+      // 左上(0,0)→右下(SIZE,SIZE) の対角線方向に補間（SVG の x1=0 y1=0 x2=1 y2=1 と同じ）
+      const [a, b] = [hex(s.gradient.from), hex(s.gradient.to)];
+      colorAt = (px, py) => {
+        const t = Math.max(0, Math.min(1, (px + py) / (2 * SIZE)));
+        return [0, 1, 2].map((i) => a[i] + (b[i] - a[i]) * t);
+      };
+    } else {
+      const rgb = hex(s.fill || s.stroke);
+      colorAt = () => rgb;
+    }
+    return { s, colorAt, opacity: s.opacity ?? 1, inside: s.type === 'rect' ? insideRect : insideLine };
+  });
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
       // 背景から順に重ねる（プリマルチプライドで合成）
       let r = 0, g = 0, b = 0, a = 0;
-      for (const { s, rgb, inside } of layers) {
+      for (const { s, colorAt, opacity, inside } of layers) {
         let hit = 0;
         for (let sy = 0; sy < SS; sy++) {
           for (let sx = 0; sx < SS; sx++) {
             if (inside(s, (x + (sx + 0.5) / SS) * k, (y + (sy + 0.5) / SS) * k)) hit++;
           }
         }
-        const cov = hit / (SS * SS);
+        const cov = (hit / (SS * SS)) * opacity;
         if (cov === 0) continue;
+        const rgb = colorAt((x + 0.5) * k, (y + 0.5) * k);
         r = rgb[0] * cov + r * (1 - cov);
         g = rgb[1] * cov + g * (1 - cov);
         b = rgb[2] * cov + b * (1 - cov);
