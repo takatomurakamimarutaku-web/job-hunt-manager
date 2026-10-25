@@ -1,6 +1,7 @@
 // ホーム：進行中の応募数と直近の選考予定（タスクの表示は Phase 3 で追加）
 
 import { getHomeSummary, listCompanies } from '../db.js';
+import { needsBackupReminder, REMINDER_DAYS } from '../backup.js';
 import { statusText } from '../stages.js';
 import { h, icon, section, emptyState, formatDateTime, relativeDay } from '../ui.js';
 
@@ -16,7 +17,8 @@ export async function render(ctx) {
         section(null, emptyState('まだ企業が登録されていません。まずは気になる企業を登録しましょう。',
           h('a', { class: 'btn btn-primary', href: '#/company/new' }, icon('plus'), '企業を追加'))),
         h('p', { class: 'notice notice-info' },
-          'データはこの端末の中だけに保存されます。iPhone ではホーム画面に追加して使ってください（Safari のままだと、長期間使わない場合にデータが削除されることがあります）。')
+          'データはこの端末の中だけに保存されます。iPhone ではホーム画面に追加して使ってください（Safari のままだと、長期間使わない場合にデータが削除されることがあります）。'),
+        h('p', { class: 'muted center' }, h('a', { href: '#/backup' }, 'バックアップから復元する'))
       ),
     };
   }
@@ -51,6 +53,10 @@ export async function render(ctx) {
   return {
     title: 'ホーム',
     node: h('div', {},
+      needsBackupReminder(ctx.settings.lastBackupAt, true, now) && h('a', { class: 'backup-reminder', href: '#/backup' },
+        icon('doc'),
+        h('span', {}, ctx.settings.lastBackupAt ? `最後のバックアップから${REMINDER_DAYS}日以上経っています` : 'まだバックアップしていません'),
+        icon('chevron')),
       cards,
       section('直近の選考予定', upcoming),
       section('タスク', h('p', { class: 'muted' }, '期限切れ・今日・今週のタスクは Phase 3 で表示されるようになります。'))

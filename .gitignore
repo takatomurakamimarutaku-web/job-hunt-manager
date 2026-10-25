@@ -4,3 +4,4 @@ node_modules/
 # 個人データのバックアップを誤ってコミットしないため
 *.jhbak
 backup*.json
+*-backup-*.json

@@ -1,8 +1,8 @@
-// 設定：選考の段階（追加・名称変更・並べ替え・削除）、データの保存場所についての注意
+// 設定：バックアップへの入口、選考の段階（追加・名称変更・並べ替え・削除）、データの保存場所についての注意
 
 import { saveSettings, listApplications, listEvents } from '../db.js';
 import { sortStages, addStage, renameStage, moveStage, removeStage, BUILTIN_STAGE_IDS, STAGE_LABEL_MAX } from '../stages.js';
-import { h, icon, section, openSheet, confirmDialog, showToast, showError, field } from '../ui.js';
+import { h, icon, section, openSheet, confirmDialog, showToast, showError, field, formatDateTime } from '../ui.js';
 
 export async function render(ctx) {
   const [applications, events] = await Promise.all([listApplications(ctx.db), listEvents(ctx.db)]);
@@ -94,8 +94,16 @@ export async function render(ctx) {
           h('p', {}, 'データはすべてこの端末の中（ブラウザの IndexedDB）にだけ保存され、外部には送信されません。'),
           h('p', {}, 'アプリ内のデータは暗号化されていません。保護は iPhone 本体のロック（パスコード・Face ID）に依存します。'),
           h('p', {}, 'Safari で開いた場合とホーム画面のアプリでは保存場所が別です。ホーム画面に追加して使ってください。'),
-          h('p', {}, '暗号化バックアップは Phase 2 で追加予定です。')
+          h('p', {}, '端末の故障・紛失や機種変更に備えて、定期的にバックアップしてください。')
         )
+      ),
+      section('バックアップ',
+        h('ul', { class: 'list' }, h('li', {}, h('a', { class: 'list-item', href: '#/backup' },
+          icon('doc', 'icon lead-icon'),
+          h('span', { class: 'list-item-body' },
+            h('span', { class: 'list-item-title' }, 'バックアップと復元'),
+            h('span', { class: 'list-item-sub block' }, ctx.settings.lastBackupAt ? `最終バックアップ：${formatDateTime(ctx.settings.lastBackupAt)}` : 'まだバックアップしていません')),
+          icon('chevron'))))
       ),
       section('選考の段階',
         h('p', { class: 'muted' }, '名称の変更と並べ替えができます。追加した段階は、使用している応募がなければ削除できます。'),

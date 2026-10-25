@@ -3,6 +3,7 @@
 import { openDB, ensureSettings, getSettings } from './db.js';
 import { startRouter, goBack, navigate, refresh } from './router.js';
 import { showError } from './ui.js';
+import { requestPersistence } from './backup.js';
 import * as home from './views/home.js';
 import * as companies from './views/companies.js';
 import * as companyForm from './views/company-form.js';
@@ -13,13 +14,14 @@ import * as board from './views/board.js';
 import * as add from './views/add.js';
 import * as more from './views/more.js';
 import * as settings from './views/settings.js';
+import * as backup from './views/backup.js';
 import * as placeholder from './views/placeholder.js';
 
 /** アプリのバージョン。sw.js の CACHE_VERSION と同じ値にする（check-pwa.js で検証） */
-export const APP_VERSION = 'v2';
+export const APP_VERSION = 'v3';
 
 const VIEWS = {
-  home, companies, board, add, more, settings,
+  home, companies, board, add, more, settings, backup,
   companyNew: companyForm,
   companyEdit: companyForm,
   company: companyDetail,
@@ -51,6 +53,7 @@ function fallbackOf(route) {
     case 'applicationEdit': return `/application/${encodeURIComponent(route.params.id)}`;
     case 'company': return '/companies';
     case 'application': return '/board';
+    case 'backup': return '/settings';
     case 'companies': case 'settings': case 'questions': case 'documents':
     case 'contacts': case 'compare': case 'stats': return '/more';
     default: return '/home';
@@ -152,6 +155,8 @@ async function boot() {
   try {
     db = await openDB();
     await ensureSettings(db);
+    // ブラウザが容量不足時にデータを自動削除しないよう保護を求める（対応環境のみ。結果はバックアップ画面に表示）
+    requestPersistence().catch(() => {});
   } catch (err) {
     els.main.textContent = `データベースを開けませんでした：${err.message}`;
     return;

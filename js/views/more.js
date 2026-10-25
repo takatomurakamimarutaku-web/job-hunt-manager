@@ -9,6 +9,7 @@ const ITEMS = [
   { href: '#/contacts', icon: 'people', label: '担当者・エージェント', phase: 5 },
   { href: '#/compare', icon: 'compare', label: '企業比較', phase: 6 },
   { href: '#/stats', icon: 'stats', label: '統計', phase: 7 },
+  { href: '#/backup', icon: 'doc', label: 'バックアップと復元' },
   { href: '#/settings', icon: 'gear', label: '設定' },
 ];
 
